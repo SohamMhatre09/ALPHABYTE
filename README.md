@@ -26,3 +26,27 @@ The frontend is built using **React** and **Vite**, which offers a smooth develo
    **How to use**:  
    - Check the error list for critical issues and access details by clicking on individual errors.
    - Use the AI-powered solutions to get immediate suggestions for fixing problems.
+     
+  
+### 🛠️ **How to Get Started**
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/SohamMhatre09/ALPHABYTE.git
+   ```
+
+2. **Install dependencies and run server:**
+   ```bash
+   cd ALPHABYTE/Frontend/hacktopia
+   npm install
+   npm run dev
+
+   cd Backend
+   npm install
+   node server.js
+   ```
+
+4. **Navigate to the local server in your browser:**
+   ```bash
+   http://localhost:5173/
+   ```
