@@ -86,11 +86,13 @@ export default function ErrorClassificationDashboard() {
   };
 
   const styles = {
-    body: {
-      margin: '0',
-      padding: '0',
+    body:{
+      margin:0
     },
+   
     container: {
+      margin: '0px',
+      padding: '0px',
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
