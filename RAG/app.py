@@ -143,3 +143,30 @@ class ErrorAnalysisSystem:
         except Exception as e:
             logger.error(f"Error processing error message: {str(e)}")
             raise
+csv_file = os.environ.get('CSV_FILE', './combined_error.csv')
+api_key = "AIzaSyCi_rpYtGy-ms-Io7_2fz0CpjUhCIoBFlE"
+
+if not api_key:
+    logger.error("GOOGLE_API_KEY environment variable is not set")
+    raise ValueError("GOOGLE_API_KEY environment variable is not set")
+
+try:
+    system = ErrorAnalysisSystem(csv_file, api_key)
+except Exception as e:
+    logger.error(f"Failed to initialize ErrorAnalysisSystem: {str(e)}")
+    raise
+
+    
+try:
+    data = request.json
+    if 'error_message' not in data:
+        logger.warning("No error_message provided in request")
+        return jsonify({"error": "No error_message provided"}), 400
+    
+    error_message = data['error_message']
+    logger.info(f"Processing error message: {error_message[:50]}...")
+    result = system.process_error(error_message)
+    return jsonify(result)
+except Exception as e:
+    logger.error(f"Error processing request: {str(e)}")
+    return jsonify({"error": "Internal server error", "details": str(e)}), 500
