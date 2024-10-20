@@ -1,0 +1,87 @@
+/* AISolver.css */
+
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 768px; /* Equivalent to max-w-3xl */
+  }
+  
+  .card {
+    margin-bottom: 24px; /* Equivalent to mb-6 */
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    background: linear-gradient(to right, #6b5bca, #ec6b86); /* Gradient background */
+    color: white;
+    padding: 16px;
+  }
+  
+  .card-title {
+    font-size: 24px; /* Equivalent to text-2xl */
+    font-weight: bold;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between form elements */
+  }
+  
+  .label {
+    color: #4a5568; /* Text color for labels */
+    font-weight: 500; /* Font weight */
+  }
+  
+  .textarea {
+    margin-top: 4px; /* mt-1 */
+    height: 96px; /* h-24 */
+    transition: all 0.3s ease;
+    border: 1px solid #cbd5e0; /* Default border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 8px;
+  }
+  
+  .textarea:hover,
+  .textarea:focus {
+    border-color: #6b5bca; /* Border color on hover/focus */
+    box-shadow: 0 0 0 2px rgba(107, 91, 202, 0.6); /* Focus shadow */
+    outline: none; /* Remove default outline */
+  }
+  
+  .button {
+    width: 100%;
+    background: linear-gradient(to right, #6b5bca, #ec6b86); /* Gradient background */
+    color: white;
+    transition: all 0.3s ease;
+    padding: 12px; /* Padding */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    font-weight: bold; /* Font weight */
+  }
+  
+  .button:hover {
+    background: linear-gradient(to right, #5b4cb0, #d95b7c); /* Darker gradient on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  }
+  
+  .result-card {
+    margin-top: 24px; /* mt-6 */
+    background: rgba(135, 206, 250, 0.3); /* Light background */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #93c5fd; /* Border color */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  }
+  
+  .result-title {
+    color: #1e3a8a; /* Dark text color for the title */
+  }
+  
+  .result-content {
+    color: #1e40af; /* Text color for results */
+    padding: 16px; /* Padding for result content */
+  }
+  
