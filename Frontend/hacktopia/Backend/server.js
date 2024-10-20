@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection details
-const mongoURI = 'mongodb+srv://admin:admin@coephackathon.ny1gj.mongodb.net/';
+const mongoURI = 'mongodb+srv://admin:admin@hackatopia.ny1gj.mongodb.net/';
 const dbName = 'errorLogs';
 const collectionName = 'aiAnalysis';
 
