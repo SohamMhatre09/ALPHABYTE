@@ -81,6 +81,7 @@ export default function ErrorSolverHomepage() {
         <section className="demo">
           <div className="container">
             <h2 className="section-title">See It in Action</h2>
+            {/* video erro solved */}
             <div className="demo-video">
               <video
                 src={vid}
