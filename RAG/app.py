@@ -12,8 +12,9 @@ import os
 import logging
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app)  # This enables CORS for all routes
 
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,9 @@ class ErrorClassifier:
             self.df = pd.read_csv(csv_file)
             self.vectorizer = TfidfVectorizer()
             self.tfidf_matrix = self.vectorizer.fit_transform(self.df['EventTemplate'])
+            logger.info(f"Successfully initialized ErrorClassifier with {len(self.df)} entries")
         except Exception as e:
+            logger.error(f"Failed to initialize ErrorClassifier: {str(e)}")
             raise
 
     def preprocess_text(self, text):
@@ -46,6 +49,7 @@ class ErrorClassifier:
         combined_scores = self.combined_similarity(query)
         top_indices = combined_scores.argsort()[-n:][::-1]
         return self.df.iloc[top_indices]
+
 class ErrorAnalysisSystem:
     def __init__(self, csv_file, api_key):
         try:
@@ -143,6 +147,8 @@ class ErrorAnalysisSystem:
         except Exception as e:
             logger.error(f"Error processing error message: {str(e)}")
             raise
+
+# Initialize the ErrorAnalysisSystem
 csv_file = os.environ.get('CSV_FILE', './combined_error.csv')
 api_key = "AIzaSyCi_rpYtGy-ms-Io7_2fz0CpjUhCIoBFlE"
 
@@ -156,17 +162,26 @@ except Exception as e:
     logger.error(f"Failed to initialize ErrorAnalysisSystem: {str(e)}")
     raise
 
+@app.route('/analyze', methods=['POST', 'OPTIONS'])
+def analyze_error():
+    if request.method == 'OPTIONS':
+        # Handling preflight request
+        return '', 204
     
-try:
-    data = request.json
-    if 'error_message' not in data:
-        logger.warning("No error_message provided in request")
-        return jsonify({"error": "No error_message provided"}), 400
-    
-    error_message = data['error_message']
-    logger.info(f"Processing error message: {error_message[:50]}...")
-    result = system.process_error(error_message)
-    return jsonify(result)
-except Exception as e:
-    logger.error(f"Error processing request: {str(e)}")
-    return jsonify({"error": "Internal server error", "details": str(e)}), 500
+    try:
+        data = request.json
+        if 'error_message' not in data:
+            logger.warning("No error_message provided in request")
+            return jsonify({"error": "No error_message provided"}), 400
+        
+        error_message = data['error_message']
+        logger.info(f"Processing error message: {error_message[:50]}...")
+        result = system.process_error(error_message)
+        return jsonify(result)
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
