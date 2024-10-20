@@ -33,9 +33,9 @@ export default function ErrorSolverHomepage() {
           <a href="#" className="nav-link">Pricing</a>
           <a href="#" className="nav-link">About</a>
           <a href="#" className="nav-link">Contact</a>
-          {/* <button onClick={toggleTheme} className="theme-toggle">
+          <button onClick={toggleTheme} className="theme-toggle">
             {theme === 'light' ? <Moon /> : <Sun />}
-          </button> */}
+          </button>
         </nav>
       </header>
       <main>
