@@ -275,9 +275,9 @@ export default function ErrorClassificationDashboard() {
             <button style={styles.lowButton} onClick={() => setLowCount(0)}>  {/* Updated low button */}
               Low: {lowCount}
             </button>
-            <button style={styles.toggleButton} onClick={() => setIsDarkMode(!isDarkMode)}>
+            {/* <button style={styles.toggleButton} onClick={() => setIsDarkMode(!isDarkMode)}>
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            </button> */}
           </div>
         </div>
 
