@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, BarChart2, FileSearch, Layers, Zap, Sun, Moon } from "lucide-react";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import img1 from '../../assets/rajnish-mohan.png';
+import img1 from '../../assets/ceo1.jpg';
+import img2 from '../../assets/ceo2.jpg';
+import img3 from '../../assets/ceo3.png';
 import vid from '../../assets/vid.mp4';
+
+const images = [img1, img2, img3];
+
 
 export default function ErrorSolverHomepage() {
   const [theme, setTheme] = useState('light');
@@ -103,7 +108,7 @@ export default function ErrorSolverHomepage() {
                 <div key={i} className="testimonial-card">
                   <div className="testimonial-header">
                     <img
-                      src={img1}
+                      src={img3}
                       alt={`User ${i}`}
                       className="testimonial-avatar"
                     />
