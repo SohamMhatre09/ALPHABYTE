@@ -312,6 +312,7 @@ export default function ErrorClassificationDashboard() {
                   <div style={{ ...styles.badge1, ...getErrorTypeStyle(selectedError.analysis?.severity) }}>
                     {selectedError.analysis?.severity}
                   </div>
+                  //display of the content which are coming from the mongodb
                   
                   <div style={styles.alert}>
                     <h3>Core Issue</h3>
@@ -327,6 +328,10 @@ export default function ErrorClassificationDashboard() {
                     <h3>Likely Cause</h3>
                     <p>{selectedError.analysis?.likelyCause}</p>
                   </div>
+
+
+
+
 
                   <div style={styles.alert}>
                     <h3>Suggested Solutions</h3>
@@ -355,6 +360,9 @@ export default function ErrorClassificationDashboard() {
           </div>
         </div>
       </div>
+
+
+
     </div>
   );
 }
