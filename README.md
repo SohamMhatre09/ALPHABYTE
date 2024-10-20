@@ -11,4 +11,18 @@
 
 3. **Intelligent Notifications**  
    The system sends alerts directly to your team with detailed error information, classifications, and proposed solutions, ensuring timely responses.
+   
 
+### 🏗️ **Architecture and Components**
+
+#### **Frontend (React + Vite)**  
+The frontend is built using **React** and **Vite**, which offers a smooth development experience and optimized production builds.
+
+1. **ErrorClassificationDashboard**  
+   - Displays a categorized list of errors by severity and frequency.
+   - Includes detailed insights like core error issues, potential causes, and suggested solutions.  
+   - Fetches and displays real-time error data.
+
+   **How to use**:  
+   - Check the error list for critical issues and access details by clicking on individual errors.
+   - Use the AI-powered solutions to get immediate suggestions for fixing problems.
