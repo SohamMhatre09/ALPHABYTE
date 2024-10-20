@@ -26,7 +26,7 @@ export default function ErrorSolverHomepage() {
       <header className="header">
         <a href="#" className="logo">
           <AlertCircle className="logo-icon" />
-          <span className="logo-text">ResolvePro</span>
+          <span className="logo-text">ProResolve</span>
         </a>
         <nav className="nav">
           <a href="#" className="nav-link">Features</a>
