@@ -400,6 +400,8 @@ export default function ErrorSolverHomepage() {
         }
         .faq-item {
           margin-bottom: 1.5rem;
+          border-bottom:1px solid black;
+          border-radius:4px;
         }
         .faq-question {
           font-weight: bold;
