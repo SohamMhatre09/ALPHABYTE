@@ -61,7 +61,7 @@ export default function ErrorClassificationDashboard() {
         setMediumCount(medium); // Update medium count
         setLowCount(low); // Update low count
       });
-    }, 5000);
+    }, 100); // change this in round 2
 
     return () => clearInterval(interval);
   }, []);
