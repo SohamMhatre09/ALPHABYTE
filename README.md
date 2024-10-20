@@ -11,12 +11,18 @@
 
 3. **Intelligent Notifications**  
    The system sends alerts directly to your team with detailed error information, classifications, and proposed solutions, ensuring timely responses.
+   
 
-4. **Slack Integration**  
-   Critical issues are instantly logged to Slack, allowing for real-time team collaboration and communication.
+### 🏗️ **Architecture and Components**
 
-5. **Analytics Dashboard**  
-   Visualize error trends and monitor system health through comprehensive charts and dashboards, enabling informed, data-driven decisions.
+#### **Frontend (React + Vite)**  
+The frontend is built using **React** and **Vite**, which offers a smooth development experience and optimized production builds.
 
-6. **AI Solver Interface**  
-   Developers can input specific errors and receive AI-generated solutions, streamlining error resolution.
+1. **ErrorClassificationDashboard**  
+   - Displays a categorized list of errors by severity and frequency.
+   - Includes detailed insights like core error issues, potential causes, and suggested solutions.  
+   - Fetches and displays real-time error data.
+
+   **How to use**:  
+   - Check the error list for critical issues and access details by clicking on individual errors.
+   - Use the AI-powered solutions to get immediate suggestions for fixing problems.
