@@ -3,6 +3,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from fuzzywuzzy import fuzz
 import numpy as np
+import json
+import re
+import google.generativeai as genai
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import os
+import logging
+
+app = Flask(__name__)
+CORS(app)  
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 class ErrorClassifier:
     def __init__(self, csv_file):
         try:
@@ -32,4 +46,100 @@ class ErrorClassifier:
         combined_scores = self.combined_similarity(query)
         top_indices = combined_scores.argsort()[-n:][::-1]
         return self.df.iloc[top_indices]
+class ErrorAnalysisSystem:
+    def __init__(self, csv_file, api_key):
+        try:
+            self.classifier = ErrorClassifier(csv_file)
+            genai.configure(api_key=api_key)
+            self.genai_model = genai.GenerativeModel('gemini-1.5-pro')
+            logger.info("Successfully initialized ErrorAnalysisSystem")
+        except Exception as e:
+            logger.error(f"Failed to initialize ErrorAnalysisSystem: {str(e)}")
+            raise
 
+    def generate_ai_response(self, error_message, model_output):
+        prompt = f"""
+        # Error Analysis Prompt Template
+
+        You are an AI assistant specialized in analyzing error messages and providing detailed insights. Given an error message and its classification, you need to provide a comprehensive analysis in JSON format. Here's an example followed by a new query:
+
+        ## Example:
+
+        Input Error Message: "10.251.35.1:50010:Got exception while serving blk_7940316270494947483 to /10.251.122.38:"
+
+        Model Output:
+        ```
+        Unnamed: 0 Level Component EventTemplate type
+        789 WARN dfs.DataNode Got exception while serving blk_<*> to /<*> HDFS
+        ```
+
+        Expected Output:
+        {{
+          "analysis": {{
+            "coreIssue": "An exception occurred while the DataNode was serving a specific block to a client."
+          }},
+          "classification": "HDFS",
+          "severity": "WARN",
+          "likelyCause": "There could be network issues, disk I/O problems, or the block might be corrupted. It's also possible that the client disconnected unexpectedly during data transfer.",
+          "suggestedSolution": [
+            "Check the DataNode logs for more detailed error messages",
+            "Verify the health of the HDFS cluster",
+            "Ensure that the block is not corrupted by running fsck",
+            "Check network connectivity between the DataNode and the client"
+          ],
+          "tips": [
+            "Regularly monitor DataNode health and performance",
+            "Implement proper error handling and retry mechanisms in HDFS clients",
+            "Keep HDFS software up-to-date to benefit from bug fixes and performance improvements"
+          ],
+          "actionableRecommendations": [
+            "Run 'hdfs fsck' to check for any corrupted blocks",
+            "Review DataNode logs for any recurring issues or patterns",
+            "Monitor network performance between DataNodes and clients",
+            "Consider increasing the number of replicas for important data to improve fault tolerance"
+          ]
+        }}
+
+        ## New Query:
+
+        Input Error Message: "{error_message}"
+
+        Model Output:
+        {model_output}
+
+        Based on the input error message and model output, provide a detailed analysis in the same JSON format as the example above. Include relevant information for all fields: analysis, classification, severity, likelyCause, suggestedSolution, tips, and actionableRecommendations. Do not include any markdown formatting or code blocks in your response, just the raw JSON object.
+        """
+
+        try:
+            result = self.genai_model.generate_content(prompt)
+            cleaned_result = result.text.strip()
+            json_match = re.search(r'\{.*\}', cleaned_result, re.DOTALL)
+            
+            if json_match:
+                ai_response = json.loads(json_match.group())
+                logger.info("Successfully generated AI response")
+                return ai_response
+            else:
+                logger.warning('No JSON object found in AI response')
+                return {"error": "No JSON object found in AI response", "rawResponse": cleaned_result}
+        except json.JSONDecodeError as e:
+            logger.error(f'Failed to parse AI response as JSON: {e}')
+            return {"error": "Invalid JSON format from AI", "rawResponse": cleaned_result}
+        except Exception as e:
+            logger.error(f'Error generating AI response: {str(e)}')
+            return {"error": "Failed to generate AI response", "details": str(e)}
+
+    def process_error(self, error_message):
+        try:
+            top_matches = self.classifier.find_top_matches(error_message)
+            model_output = top_matches[['Level', 'Component', 'EventTemplate', 'type']].to_dict(orient='records')
+            ai_response = self.generate_ai_response(error_message, json.dumps(model_output))
+            logger.info(f"Processed error message: {error_message[:50]}...")
+            return {
+                "errorMessage": error_message,
+                "modelClassification": model_output,
+                "aiAnalysis": ai_response
+            }
+        except Exception as e:
+            logger.error(f"Error processing error message: {str(e)}")
+            raise
