@@ -130,7 +130,63 @@ app.use((err, req, res, next) => {
         error: err.message
     });
 });
+// Route to create a new project for an existing user
+// Route to create a new project (creates user if not exists)
+app.post('/create-project/:username/:projectName', async (req, res) => {
+    const { username, projectName } = req.params;
 
+    try {
+        // Find or create user
+        let user = await User.findOne({ userName: username });
+        let userCreated = false;
+
+        if (!user) {
+            // Create new user if doesn't exist
+            user = new User({
+                userName: username,
+                projects: new Map()
+            });
+            userCreated = true;
+        }
+
+        // Check if project already exists for this user
+        if (user.projects.has(projectName)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Project already exists for this user'
+            });
+        }
+
+        // Add new project to user's projects Map
+        user.projects.set(projectName, {
+            errors: [] // Initialize with empty errors array
+        });
+
+        // Save the user document
+        await user.save();
+
+        return res.status(201).json({
+            success: true,
+            message: userCreated ? 
+                'User created and project added successfully' : 
+                'Project created successfully',
+            data: {
+                userName: user.userName,
+                projectName: projectName,
+                allProjects: Array.from(user.projects.keys()),
+                userCreated: userCreated
+            }
+        });
+
+    } catch (error) {
+        console.error('Error creating project:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error creating project',
+            error: error.message
+        });
+    }
+});
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
