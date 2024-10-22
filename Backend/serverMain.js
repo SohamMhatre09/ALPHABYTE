@@ -1,9 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';  // Import cors
 
 // Initialize Express
 const app = express();
 const port = 3000;
+
+// Use CORS middleware
+app.use(cors());  // Enable CORS for all routes and origins
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs', {
