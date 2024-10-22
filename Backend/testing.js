@@ -19,8 +19,8 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         method: req.method,
         timestamp: new Date().toISOString(),
         projectInfo: {
-            userName: 'Mihir Pande',
-            projectName: 'awsome',
+            userName: 'dinnerborne@gmail.com',
+            projectName: 'AlphaProject',
             platform: 'Node.js'
         }
     };
@@ -30,25 +30,23 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'X-Project-Name': 'awsome',
-            'X-User-Name': 'Mihir Pande'
+            'X-Project-Name': 'AlphaProject',
+            'X-User-Name': 'dinnerborne@gmail.com'
         },
         body: JSON.stringify(errorDetails)
     }).catch(error => console.error('Error reporting failed:', error));
-
-    // Log the error to the console (or use any other logging mechanism)
-    console.error('Error details:', errorDetails);
 
     // Respond to the client with a generic error message
     res.status(500).send('Internal Server Error');
 };
 
 // Sample route that throws an error for demonstration
-app.get('/error', (req, res) => {
-    throw new Error('This is a simulated error!');
+app.get('/error', (req, res, next) => {
+    // Use next(err) to pass the error to the error-handling middleware
+    next(new Error('This is a simulated error!'));
 });
 
-// Use the error tracking middleware after all routes
+// Usage: Add the error tracking middleware after all routes
 app.use(errorTrackingMiddleware);
 
 // Start the server
