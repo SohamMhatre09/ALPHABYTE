@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../CardComponent';
+import { Card, CardHeader, CardTitle, CardContent } from './CardComponent';
 import { AlertCircle } from 'lucide-react';
-import Alert from "../Alert-component"
-import CodeBlock from '../Code-block-component';
+import Alert from "./Alert-component"
+import CodeBlock from './Code-block-component';
 
 const InitializeProject = ({ projectName = "", selectedPlatform = "" }) => {
   const getSDKSnippet = () => {
