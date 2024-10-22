@@ -28,7 +28,7 @@ const AllDashboard = () => {
 
     const fetchProjects = async (email) => {
         try {
-            const response = await fetch(`http://localhost:3002/get-projects?username=${encodeURIComponent(email)}`);
+            const response = await fetch(`http://localhost:3002/get-projects?username=jane.doe@example.com`);
             const data = await response.json();
             setProjects(data[email] || {});
         } catch (error) {
