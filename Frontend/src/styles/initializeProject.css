@@ -180,18 +180,3 @@
     width: 100%;
   }
 }
-
-.copy-button {
-  padding: 0.75rem 1rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.copy-button:hover {
-  background-color: #2563eb;
-}
