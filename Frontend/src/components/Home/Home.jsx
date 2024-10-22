@@ -191,6 +191,7 @@ export default function ErrorSolverHomepage() {
         }
 
         body {
+          width:100%;
           font-family: 'Poppins', sans-serif;
           transition: background-color 0.3s ease;
           margin:0;
