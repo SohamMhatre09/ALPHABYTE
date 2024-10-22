@@ -1,27 +1,37 @@
+// src/App.js
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-
 import Home from './components/Home/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import ErrorClassificationDashboard from "./components/ErrorClassificationDashborad";
 import ProjectCreator from "./components/CreateNewProject";
-
+import InitializeProject from "./components/InitializeProject/InitializeProject";
+import AuthGuard from "./components/AuthGuard";
+import { auth } from "./components/Firebase";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import InitializeProject from "./components/InitializeProject/InitializeProject";
-import { auth } from "./components/Firebase"; // Assuming you're using Firebase auth
 
 function App() {
   const [user, setUser] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
+      setIsInitialized(true);
     });
     
-    return () => unsubscribe(); // Cleanup the subscription on component unmount
+    return () => unsubscribe();
   }, []);
+
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -29,14 +39,54 @@ function App() {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Routes>
+              {/* Public routes */}
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={user ? <Navigate to="/create-new-project" /> : <Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/create-new-project" element={<ProjectCreator />} />
-              <Route path="/initialize-project" element={<InitializeProject/>} />
-              <Route path="/error-classification-dashboard" element={user ? <ErrorClassificationDashboard /> : <Navigate to="/login" />} />
-              <Route path="/logout" element={<Register />} />
+              <Route 
+                path="/login" 
+                element={user ? <Navigate to="/create-new-project" /> : <Login />} 
+              />
+              <Route 
+                path="/register" 
+                element={user ? <Navigate to="/create-new-project" /> : <Register />} 
+              />
 
+              {/* Protected routes */}
+              <Route
+                path="/create-new-project"
+                element={
+                  <AuthGuard>
+                    <ProjectCreator />
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/initialize-project"
+                element={
+                  <AuthGuard>
+                    <InitializeProject />
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/error-classification-dashboard"
+                element={
+                  <AuthGuard>
+                    <ErrorClassificationDashboard />
+                  </AuthGuard>
+                }
+              />
+
+              {/* Redirect /logout to login page */}
+              <Route 
+                path="/logout" 
+                element={<Navigate to="/login" replace />} 
+              />
+
+              {/* Catch all route - redirect to home */}
+              <Route 
+                path="*" 
+                element={<Navigate to="/" replace />} 
+              />
             </Routes>
             <ToastContainer />
           </div>
