@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ProjectCreator.css';
+import { getAuth, signOut } from 'firebase/auth'; // Import Firebase Auth methods
+import '../styles/ProjectCreator.css';
 
-const ProjectCreator = ({ userName = "John Doe" }) => {
+const ProjectCreator = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('popular');
   const [projectName, setProjectName] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState(''); // State to store username
+
+  // Initialize Firebase Auth
+  const auth = getAuth();
+
+  // Fetch the current user from Firebase Auth
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      setUserName(user.displayName || user.email || 'Anonymous'); // Display name, email, or fallback
+    }
+  }, [auth]);
+
+  // Logout handler
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        navigate('/login'); // Redirect to login after logout
+      })
+      .catch((error) => {
+        console.error('Error logging out:', error);
+      });
+  };
 
   const getInitials = (name) => {
     return name
       .split(' ')
-      .map(word => word[0])
+      .map((word) => word[0])
       .join('')
       .toUpperCase();
   };
@@ -28,27 +52,10 @@ const ProjectCreator = ({ userName = "John Doe" }) => {
   ];
 
   const platforms = [
-    { 
-      name: "Node.js",
-      description: "JavaScript runtime built on Chrome's V8 engine",
-      color: "#68a063",
-      // icon:
-    },
-    { 
-      name: "Python",
-      description: "General-purpose programming language",
-      color: "#4584b6"
-    },
-    { 
-      name: "React",
-      description: "JavaScript library for building user interfaces",
-      color: "#61dafb"
-    },
-    { 
-      name: "Vue.js",
-      description: "Progressive JavaScript framework",
-      color: "#42b883"
-    }
+    { name: 'Node.js', description: 'JavaScript runtime built on Chrome\'s V8 engine', color: '#68a063' },
+    { name: 'Python', description: 'General-purpose programming language', color: '#4584b6' },
+    { name: 'React', description: 'JavaScript library for building user interfaces', color: '#61dafb' },
+    { name: 'Vue.js', description: 'Progressive JavaScript framework', color: '#42b883' }
   ];
 
   return (
@@ -68,7 +75,7 @@ const ProjectCreator = ({ userName = "John Doe" }) => {
               <div className="menu-item">Settings</div>
               <div 
                 className="menu-item logout"
-                onClick={() => navigate('/login')}
+                onClick={handleLogout} // Use the logout handler
               >
                 Logout
               </div>
