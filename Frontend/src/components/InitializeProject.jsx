@@ -30,7 +30,7 @@ const InitializeProject = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserName(user.displayName || user.email || 'Anonymous');
+        setUserName(user.email || 'Anonymous');
         setIsLoading(false);
       } else {
         navigate('/login');
