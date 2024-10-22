@@ -1,25 +1,8 @@
-// server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import mongoose from 'mongoose';
 
-// Create an instance of Express
-const app = express();
-const PORT = process.env.PORT || 3002;
+// MongoDB connection string
+const mongoURI = 'mongodb://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs';
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/yourdbname', { // Update this to your MongoDB URI
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-// MongoDB schema
 const ErrorSchema = new mongoose.Schema({
     type: {
         type: String,
@@ -64,36 +47,65 @@ const ProjectSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
+    suppressReservedKeysWarning: true, // Suppress the reserved keys warning
 });
 
+// Model
 const Project = mongoose.model('Project', ProjectSchema);
 
-// Route to get projects by username
-app.get('/get-projects', async (req, res) => {
-    const { username } = req.query; // Get username from query parameters
-
-    if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
-    }
-
+async function addSampleData() {
     try {
-        const projects = await Project.find({ userName: username });
-        // Transform projects to match the required structure
-        const result = {};
-        projects.forEach(project => {
-            result[project.projectName] = {
-                errors: project.errors,
-            };
-        });
+        // Connect to MongoDB
+        await mongoose.connect(mongoURI);
+        console.log('MongoDB connected');
 
-        res.json({ [username]: result });
+        // Sample data to insert
+        const sampleData = [
+            {
+                userName: "john.doe@example.com",
+                projectName: "Project Alpha",
+                errors: [
+                    {
+                        type: "serverError",
+                        message: "Server not responding",
+                        stack: "Error at line 10",
+                        route: "/api/v1/resource",
+                        method: "GET",
+                        timestamp: new Date().toISOString(),
+                    }
+                ],
+            },
+            {
+                userName: "jane.doe@example.com",
+                projectName: "Project Beta",
+                errors: [],
+            },
+            {
+                userName: "john.doe@example.com",
+                projectName: "Project Gamma",
+                errors: [
+                    {
+                        type: "clientError",
+                        message: "Invalid input data",
+                        stack: "Error at line 20",
+                        route: "/api/v1/submit",
+                        method: "POST",
+                        timestamp: new Date().toISOString(),
+                    }
+                ],
+            }
+        ];
+
+        // Insert sample data into the Project collection
+        const insertedData = await Project.insertMany(sampleData);
+        console.log('Sample data added successfully:', insertedData); // Log the inserted data
     } catch (error) {
-        console.error('Error fetching projects:', error);
-        res.status(500).json({ error: 'Failed to fetch projects' });
+        console.error('Error adding sample data:', error);
+    } finally {
+        // Close the connection
+        mongoose.connection.close();
     }
-});
+}
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Run the function
+addSampleData();
