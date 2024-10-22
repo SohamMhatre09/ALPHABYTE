@@ -249,8 +249,39 @@ export default {
     }
   };
 
-  const handleGoToDashboard = () => {
-    navigate('/dashboard', { state: { projectName, userName } });
+  const handleGoToDashboard = async () => {
+    try {
+      // Format the project name to handle spaces and special characters
+      const formattedProjectName = encodeURIComponent(projectName);
+      
+      // Construct the API endpoint URL
+      const apiUrl = `http://localhost:3000/create-project/${userName}/${formattedProjectName}`;
+      
+      // Make the API request
+      const response = await fetch(apiUrl, {
+        method: 'POST', // or 'GET' depending on your API requirements
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectName,
+          userName
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      
+      // If API call is successful, navigate to dashboard
+      window.location.href = `/all-dashboard`
+  
+    } catch (error) {
+      console.error('Error creating project:', error);
+      // Handle error appropriately - maybe show an error message to user
+    }
   };
 
   if (isLoading) {

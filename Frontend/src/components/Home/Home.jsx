@@ -49,6 +49,7 @@ export default function ErrorSolverHomepage() {
             <h1 className="hero-title">Effortlessly Resolve System Errors in Real Time</h1>
             <p className="hero-subtitle">Analyze, classify, and resolve errors with advanced AI-powered insights.</p>
             <button className="cta-button" onClick={handleClick}>Get Started</button>
+            <button className="cta-button" onClick={handleClick}>Go to Dashboard</button>
           </div>
         </section>
         <section className="features">
@@ -286,6 +287,7 @@ export default function ErrorSolverHomepage() {
           text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         .cta-button {
+          margin-right:10px;
           background-color: var(--accent-color);
           color: #ffffff;
           border: none;
