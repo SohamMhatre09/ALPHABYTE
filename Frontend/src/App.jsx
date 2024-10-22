@@ -7,6 +7,7 @@ import ErrorClassificationDashboard from "./components/ErrorClassificationDashbo
 import ProjectCreator from "./components/CreateNewProject";
 import InitializeProject from "./components/InitializeProject";
 import AllDashboard from "./components/AllDashboard"; // Import the new component
+import ProjectDashboard from "./components/ErrorClassificationDashborad"; // Import your new ProjectDashboard component
 import AuthGuard from "./components/AuthGuard";
 import { auth } from "./components/Firebase";
 import { ToastContainer } from "react-toastify";
@@ -84,6 +85,14 @@ function App() {
                   </AuthGuard>
                 }
               />
+              <Route
+                path="/dashboard/:email/:projectName" // Add your new route here
+                element={
+                  <AuthGuard>
+                    <ProjectDashboard />
+                  </AuthGuard>
+                }
+              />
 
               {/* Redirect /logout to login page */}
               <Route 
@@ -96,7 +105,6 @@ function App() {
                 path="*" 
                 element={<Navigate to="/" replace />} 
               />
-              
             </Routes>
             <ToastContainer />
           </div>
