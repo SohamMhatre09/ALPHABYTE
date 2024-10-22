@@ -28,6 +28,7 @@ function Login() {
   };
 
   return (
+    <div className="container">
     <form onSubmit={handleSubmit}>
       <h3>Login</h3>
 
@@ -63,6 +64,7 @@ function Login() {
       </p>
       <SignInWithGoogle/>
     </form>
+    </div>
   );
 }
 
