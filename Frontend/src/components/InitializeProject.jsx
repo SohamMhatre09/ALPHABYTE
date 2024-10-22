@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
-const ProjectCreator = () => {
+const InitializeProject = () => {
   const navigate = useNavigate();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [userName, setUserName] = useState('');
@@ -122,4 +122,4 @@ const ProjectCreator = () => {
   );
 };
 
-export default ProjectCreator;
+export default InitializeProject;
