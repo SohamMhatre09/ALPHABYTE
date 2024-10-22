@@ -64,15 +64,7 @@ const ProjectCreator = () => {
                       marginBottom: '10px',
                     }}
                   >
-                    <svg
-                      style={{ width: '30px', height: '30px', color: '#3b82f6' }}
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={platform.icon} />
-                    </svg>
+                    <img src="{platform.icon}" alt="" />
                   </div>
                   <span style={{ fontSize: '12px', color: '#374151' }}>{platform.name}</span>
                 </div>
