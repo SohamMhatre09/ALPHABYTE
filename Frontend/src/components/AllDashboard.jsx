@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { Clock, AlertCircle, Server } from 'lucide-react';
 import '../styles/AllDashboard.css';
 
 const AllDashboard = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [userName, setUserName] = useState('');
-    const [projects, setProjects] = useState({});
+    const [email, setEmail] = useState('');
+    const [projects, setProjects] = useState([]);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const auth = getAuth();
 
@@ -16,6 +16,7 @@ const AllDashboard = () => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUserName(user.displayName || user.email || 'Anonymous');
+                setEmail(user.email);  // Store the email for later use
                 await fetchProjects(user.email);
                 setIsLoading(false);
             } else {
@@ -30,8 +31,7 @@ const AllDashboard = () => {
         try {
             const response = await fetch(`http://localhost:3000/projects/${email}`);
             const data = await response.json();
-            console.log(data)
-            setProjects(data[email] || {});
+            setProjects(data.projects || []);  // Set the projects array from the response
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -43,16 +43,16 @@ const AllDashboard = () => {
             .catch((error) => console.error('Error logging out:', error));
     };
 
+    const handleProjectClick = (projectName) => {
+        navigate(`/dashboard/${email}/${projectName}`);  // Navigate to the project-specific dashboard
+    };
+
     const getInitials = (name) => {
         return name
             .split(' ')
             .map((word) => word[0])
             .join('')
             .toUpperCase();
-    };
-
-    const formatTimestamp = (timestamp) => {
-        return new Date(timestamp).toLocaleString();
     };
 
     if (isLoading) {
@@ -91,42 +91,19 @@ const AllDashboard = () => {
             <main className="main-content">
                 <h1 className="page-title">Your Projects</h1>
                 <div className="projects-grid">
-                    {Object.entries(projects).length > 0 ? (
-                        Object.entries(projects).map(([projectName, projectData]) => (
-                            <div key={projectName} className="project-card">
+                    {projects.length > 0 ? (
+                        projects.map((projectName, index) => (
+                            <div key={index} className="project-card">
                                 <div className="card-header">
                                     <h2 className="project-title">{projectName}</h2>
-                                    <span className="error-badge">
-                                        {projectData.errors.length} Errors
-                                    </span>
                                 </div>
-                                <div className="card-content">
-                                    <div className="errors-list">
-                                        {projectData.errors.slice(0, 3).map((error, index) => (
-                                            <div key={index} className="error-item">
-                                                <div className="error-header">
-                                                    <AlertCircle className="error-icon" />
-                                                    <span className="error-type">{error.type}</span>
-                                                </div>
-                                                <p className="error-message">{error.message}</p>
-                                                <div className="error-meta">
-                                                    <div className="meta-item">
-                                                        <Server className="meta-icon" />
-                                                        {error.route}
-                                                    </div>
-                                                    <div className="meta-item">
-                                                        <Clock className="meta-icon" />
-                                                        {formatTimestamp(error.timestamp)}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                        {projectData.errors.length > 3 && (
-                                            <div className="more-errors">
-                                                +{projectData.errors.length - 3} more errors
-                                            </div>
-                                        )}
-                                    </div>
+                                <div className="card-content">  
+                                    <button 
+                                        className="project-button" 
+                                        onClick={() => handleProjectClick(projectName)}
+                                    >
+                                        View Project
+                                    </button>
                                 </div>
                             </div>
                         ))
