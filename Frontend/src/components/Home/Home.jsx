@@ -23,7 +23,7 @@ export default function ErrorSolverHomepage() {
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleClick = () => {
-    navigate('/error-classification-dashboard'); // Navigate to login-signup page
+    navigate('/login'); // Navigate to login-signup page
   };
 
   return (
