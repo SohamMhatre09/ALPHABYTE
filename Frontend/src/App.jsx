@@ -5,7 +5,7 @@ import Home from './components/Home/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import ErrorClassificationDashboard from "./components/ErrorClassificationDashborad";
-import Profile from './components/Profile';
+import ProjectCreator from "./components/CreateNewProject";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,9 +30,9 @@ function App() {
           <div className="auth-inner">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={user ? <Navigate to="/profile" /> : <Login />} />
+              <Route path="/login" element={user ? <Navigate to="/create-new" /> : <Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/create-new-project" element={<ProjectCreator />} />
               <Route path="/error-classification-dashboard" element={user ? <ErrorClassificationDashboard /> : <Navigate to="/login" />} />
             </Routes>
             <ToastContainer />
