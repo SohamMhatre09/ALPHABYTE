@@ -28,7 +28,7 @@ const AllDashboard = () => {
 
     const fetchProjects = async (email) => {
         try {
-            const response = await fetch(`http://localhost:3000/get-projects?username=${email}`);
+            const response = await fetch(`http://localhost:3000/projects/${email}`);
             const data = await response.json();
             console.log(data)
             setProjects(data[email] || {});
