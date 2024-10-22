@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';  // Import cors
+import cors from 'cors';
 
 // Initialize Express
 const app = express();
@@ -19,7 +19,7 @@ mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?re
     console.error('MongoDB connection error:', err);
 });
 
-// Define the project schema (each project contains an array of errors)
+// Define the error schema
 const errorSchema = new mongoose.Schema({
     type: String,
     message: String,
@@ -69,6 +69,66 @@ app.get('/projects/:username', async (req, res) => {
         console.error('Error fetching projects:', error);
         res.status(500).json({ message: 'Server error' });
     }
+});
+
+// New route to fetch errors for a specific project
+app.get('/errors/:username/:projectName', async (req, res) => {
+    const { username, projectName } = req.params;
+
+    try {
+        // Find the user by username
+        const user = await User.findOne({ userName: username });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Check if the project exists for this user
+        if (!user.projects.has(projectName)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Project not found for this user'
+            });
+        }
+
+        // Get the project's errors
+        const projectErrors = user.projects.get(projectName).errors;
+
+        // Sort errors by timestamp in descending order (most recent first)
+        const sortedErrors = projectErrors.sort((a, b) => 
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                userName: user.userName,
+                projectName,
+                errors: sortedErrors
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching project errors:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+});
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: 'Something went wrong!',
+        error: err.message
+    });
 });
 
 // Start the server
