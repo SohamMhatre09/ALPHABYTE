@@ -12,8 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs')
-
+mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 // MongoDB schema for error objects
 const ErrorSchema = new mongoose.Schema({
@@ -45,26 +47,31 @@ const ErrorSchema = new mongoose.Schema({
     _id: false // No separate ID for error objects
 });
 
-// MongoDB schema for projects
-const ProjectSchema = new mongoose.Schema({
+// MongoDB schema for user projects
+const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: true,
     },
-    projectName: {
-        type: String,
-        required: true,
-    },
-    errors: {
-        type: [ErrorSchema],
+    projects: {
+        type: [
+            {
+                projectName: {
+                    type: String,
+                    required: true,
+                },
+                errors: {
+                    type: [ErrorSchema],
+                    default: [],
+                },
+            },
+        ],
         default: [],
     },
-}, {
-    timestamps: true,
 });
 
 // Model
-const Project = mongoose.model('Project', ProjectSchema);
+const User = mongoose.model('User', UserSchema);
 
 // Route to get projects by username
 app.get('/get-projects', async (req, res) => {
@@ -75,17 +82,21 @@ app.get('/get-projects', async (req, res) => {
     }
 
     try {
-        const projects = await Project.find({ userName: username });
-        
+        const user = await User.findOne({ userName: username });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         // Transform projects to match the required structure
-        const result = {};
-        projects.forEach(project => {
-            result[project.projectName] = {
+        const result = { [user.userName]: {} };
+        user.projects.forEach(project => {
+            result[user.userName][project.projectName] = {
                 errors: project.errors,
             };
         });
 
-        res.json({ [username]: result });
+        res.json(result);
     } catch (error) {
         console.error('Error fetching projects:', error);
         res.status(500).json({ error: 'Failed to fetch projects' });
