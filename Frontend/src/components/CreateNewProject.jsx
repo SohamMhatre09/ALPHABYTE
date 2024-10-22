@@ -4,13 +4,14 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../styles/ProjectCreator.css';
 
 const ProjectCreator = () => {
+  
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('popular');
   const [projectName, setProjectName] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [userName, setUserName] = useState('');
-  const [isLoading, setIsLoading] = useState(true);  // Added loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const auth = getAuth();
 
@@ -18,9 +19,9 @@ const ProjectCreator = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserName(user.displayName || user.email || 'Anonymous');
-        setIsLoading(false);  // Set loading to false when user is determined
+        setIsLoading(false);
       } else {
-        setTimeout(() => navigate('/login'), 500);  // Slight delay to ensure auth state is loaded
+        setTimeout(() => navigate('/login'), 500);
       }
     });
 
@@ -35,6 +36,19 @@ const ProjectCreator = () => {
       .catch((error) => {
         console.error('Error logging out:', error);
       });
+  };
+
+  const handleCreateProject = () => {
+    const projectData = {
+      projectName,
+      selectedPlatform,
+      userName,
+      createdAt: new Date().toISOString()
+    };
+
+    navigate('/initialize-project', {
+      state: projectData
+    });
   };
 
   const getInitials = (name) => {
@@ -62,7 +76,6 @@ const ProjectCreator = () => {
     { name: 'Vue.js', description: 'Progressive JavaScript framework', color: '#42b883' },
   ];
 
-  // Prevent rendering until authentication is confirmed
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -157,6 +170,7 @@ const ProjectCreator = () => {
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 placeholder="my-awesome-project"
+                className="project-input"
               />
             </div>
           </section>
@@ -164,7 +178,7 @@ const ProjectCreator = () => {
           <button 
             className="create-button"
             disabled={!selectedPlatform || !projectName}
-            onClick={() => alert(`Creating ${projectName} with ${selectedPlatform}`)}
+            onClick={handleCreateProject}
           >
             Create Project
           </button>
