@@ -20,7 +20,7 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         timestamp: new Date().toISOString(),
         projectInfo: {
             userName: 'dinnerborne@gmail.com',
-            projectName: 'awsome',
+            projectName: 'AlphaProject',
             platform: 'Node.js'
         }
     };
@@ -30,7 +30,7 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'X-Project-Name': 'awsome',
+            'X-Project-Name': 'AlphaProject',
             'X-User-Name': 'dinnerborne@gmail.com'
         },
         body: JSON.stringify(errorDetails)
