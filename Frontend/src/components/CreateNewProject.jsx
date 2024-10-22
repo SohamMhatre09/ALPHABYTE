@@ -31,7 +31,8 @@ const ProjectCreator = ({ userName = "John Doe" }) => {
     { 
       name: "Node.js",
       description: "JavaScript runtime built on Chrome's V8 engine",
-      color: "#68a063"
+      color: "#68a063",
+      // icon:
     },
     { 
       name: "Python",
@@ -53,7 +54,7 @@ const ProjectCreator = ({ userName = "John Doe" }) => {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">DevPlatform</div>
+        <div className="logo">ProResolve</div>
         <div className="profile-section">
           <div 
             className="avatar" 
