@@ -15,7 +15,7 @@ const AllDashboard = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setUserName(user.displayName || user.email || 'Anonymous');
+                setUserName(user.email || 'Anonymous');
                 setEmail(user.email);  // Store the email for later use
                 await fetchProjects(user.email);
                 setIsLoading(false);
