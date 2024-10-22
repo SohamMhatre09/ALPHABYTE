@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from './components/Home/Home';
@@ -14,17 +13,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);  // Track if Firebase has finished loading
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setIsInitialized(true);
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      setUser(authUser);
+      setIsInitialized(true);  // Only set this to true once Firebase resolves the auth state
     });
-    
+
     return () => unsubscribe();
   }, []);
 
+  // Prevent rendering any routes until Firebase confirms the auth state
   if (!isInitialized) {
     return (
       <div className="flex items-center justify-center min-h-screen">

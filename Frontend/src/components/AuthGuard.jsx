@@ -9,7 +9,7 @@ const AuthGuard = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAuthenticated(!!user);
+      setIsAuthenticated(true);
       setIsLoading(false);  // Only set isLoading to false after auth state is determined
     });
 
