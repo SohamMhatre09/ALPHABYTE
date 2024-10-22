@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signOut } from 'firebase/auth'; // Import Firebase Auth methods
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Import Firebase Auth methods
 import '../styles/ProjectCreator.css';
 
 const ProjectCreator = () => {
@@ -14,13 +14,21 @@ const ProjectCreator = () => {
   // Initialize Firebase Auth
   const auth = getAuth();
 
-  // Fetch the current user from Firebase Auth
+  // Set up an auth state observer to handle user changes
   useEffect(() => {
-    const user = auth.currentUser;
-    if (user) {
-      setUserName(user.displayName || user.email || 'Anonymous'); // Display name, email, or fallback
-    }
-  }, [auth]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Set user display name or email
+        setUserName(user.displayName || user.email || 'Anonymous');
+      } else {
+        // Redirect to login if no user is signed in
+        navigate('/login');
+      }
+    });
+
+    // Clean up the subscription on unmount
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   // Logout handler
   const handleLogout = () => {
