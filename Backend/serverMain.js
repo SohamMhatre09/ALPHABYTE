@@ -1,109 +1,73 @@
-// server.js
-import express from 'express'; // Use import instead of require
-import mongoose from 'mongoose'; // Use import instead of require
-import cors from 'cors'; // Use import instead of require
+import express from 'express';
+import mongoose from 'mongoose';
 
-// Create an instance of Express
+// Initialize Express
 const app = express();
-const PORT = process.env.PORT || 3002;
+const port = 3000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// MongoDB connection
+// Connect to MongoDB
 mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('MongoDB connection error:', err);
 });
 
-// MongoDB schema for error objects
-const ErrorSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        required: true,
-    },
-    message: {
-        type: String,
-        required: true,
-    },
-    stack: {
-        type: String,
-        required: true,
-    },
-    route: {
-        type: String,
-        required: true,
-    },
-    method: {
-        type: String,
-        required: true,
-    },
-    timestamp: {
-        type: String,
-        required: true,
-    },
-}, {
-    _id: false // No separate ID for error objects
+// Define the project schema (each project contains an array of errors)
+const errorSchema = new mongoose.Schema({
+    type: String,
+    message: String,
+    stack: String,
+    route: String,
+    method: String,
+    timestamp: Date,
 });
 
-// MongoDB schema for user projects
-const UserSchema = new mongoose.Schema({
-    userName: {
-        type: String,
-        required: true,
-    },
+// Define the project schema
+const projectSchema = new mongoose.Schema({
+    errors: [errorSchema]
+});
+
+// Define the user schema with a `projects` object
+const userSchema = new mongoose.Schema({
+    userName: String,
     projects: {
-        type: [
-            {
-                projectName: {
-                    type: String,
-                    required: true,
-                },
-                errors: {
-                    type: [ErrorSchema],
-                    default: [],
-                },
-            },
-        ],
-        default: [],
-    },
+        type: Map,  // Stores projects in a JSON-like format
+        of: projectSchema
+    }
 });
 
-// Model
-const User = mongoose.model('User', UserSchema);
+// Create a model from the schema
+const User = mongoose.model('User', userSchema);
 
-// Route to get projects by username
-app.get('/get-projects', async (req, res) => {
-    const { username } = req.query; // Get username from query parameters
-
-    if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
-    }
+// Route to fetch all project names for a specific user
+app.get('/projects/:username', async (req, res) => {
+    const { username } = req.params;
 
     try {
+        // Find the user by username
         const user = await User.findOne({ userName: username });
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        // Transform projects to match the required structure
-        const result = { [user.userName]: {} };
-        user.projects.forEach(project => {
-            result[user.userName][project.projectName] = {
-                errors: project.errors,
-            };
-        });
+        // Extract the project names (keys) from the user's projects
+        const projectNames = Array.from(user.projects.keys());
 
-        res.json(result);
+        res.json({
+            userName: user.userName,
+            projects: projectNames
+        });
     } catch (error) {
         console.error('Error fetching projects:', error);
-        res.status(500).json({ error: 'Failed to fetch projects' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
