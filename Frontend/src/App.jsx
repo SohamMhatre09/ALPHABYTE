@@ -9,7 +9,7 @@ import ProjectCreator from "./components/CreateNewProject";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import InitializeProject from "./components/InitializeProject/InitializeProject";
 import { auth } from "./components/Firebase"; // Assuming you're using Firebase auth
 
 function App() {
@@ -33,6 +33,7 @@ function App() {
               <Route path="/login" element={user ? <Navigate to="/create-new-project" /> : <Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-new-project" element={<ProjectCreator />} />
+              <Route path="/initialize-project" element={<InitializeProject/>} />
               <Route path="/error-classification-dashboard" element={user ? <ErrorClassificationDashboard /> : <Navigate to="/login" />} />
               <Route path="/logout" element={<Register />} />
 

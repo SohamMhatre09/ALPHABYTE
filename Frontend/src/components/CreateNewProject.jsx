@@ -3,14 +3,18 @@ import React, { useState } from 'react';
 const ProjectCreator = () => {
   const [activeTab, setActiveTab] = useState('popular');
   const [projectName, setProjectName] = useState('');
-
+  const [selectedPlatform, setSelectedPlatform] = useState('');
   const platforms = [
     { name: "Node.js", icon: "M5 8h10v8H5V8z" },
     { name: "Python", icon: "M8 4H4v4h4M16 4h-4v4h4" },
   ];
 
   const tabs = ['Popular', 'Browser', 'Server', 'Mobile', 'Desktop', 'Serverless', 'All'];
-
+  const handleSubmit = () => {
+    if (projectName && selectedPlatform) {
+      onComplete(projectName, selectedPlatform);
+    }
+  };
   return (
     <div style={{ backgroundColor: '#f9fafb', padding: '20px',height:'100vh' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
