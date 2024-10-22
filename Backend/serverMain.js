@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // MongoDB connection string
-const mongoURI = 'mongodb://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs';
+const mongoURI = 'mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs';
 
 const ErrorSchema = new mongoose.Schema({
     type: {
