@@ -1,8 +1,21 @@
-import mongoose from 'mongoose';
+// server.js
+import express from 'express'; // Use import instead of require
+import mongoose from 'mongoose'; // Use import instead of require
+import cors from 'cors'; // Use import instead of require
 
-// MongoDB connection string
-const mongoURI = 'mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs';
+// Create an instance of Express
+const app = express();
+const PORT = process.env.PORT || 3002;
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// MongoDB connection
+mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs')
+
+
+// MongoDB schema for error objects
 const ErrorSchema = new mongoose.Schema({
     type: {
         type: String,
@@ -32,6 +45,7 @@ const ErrorSchema = new mongoose.Schema({
     _id: false // No separate ID for error objects
 });
 
+// MongoDB schema for projects
 const ProjectSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -47,65 +61,38 @@ const ProjectSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
-    suppressReservedKeysWarning: true, // Suppress the reserved keys warning
 });
 
 // Model
 const Project = mongoose.model('Project', ProjectSchema);
 
-async function addSampleData() {
-    try {
-        // Connect to MongoDB
-        await mongoose.connect(mongoURI);
-        console.log('MongoDB connected');
+// Route to get projects by username
+app.get('/get-projects', async (req, res) => {
+    const { username } = req.query; // Get username from query parameters
 
-        // Sample data to insert
-        const sampleData = [
-            {
-                userName: "john.doe@example.com",
-                projectName: "Project Alpha",
-                errors: [
-                    {
-                        type: "serverError",
-                        message: "Server not responding",
-                        stack: "Error at line 10",
-                        route: "/api/v1/resource",
-                        method: "GET",
-                        timestamp: new Date().toISOString(),
-                    }
-                ],
-            },
-            {
-                userName: "jane.doe@example.com",
-                projectName: "Project Beta",
-                errors: [],
-            },
-            {
-                userName: "john.doe@example.com",
-                projectName: "Project Gamma",
-                errors: [
-                    {
-                        type: "clientError",
-                        message: "Invalid input data",
-                        stack: "Error at line 20",
-                        route: "/api/v1/submit",
-                        method: "POST",
-                        timestamp: new Date().toISOString(),
-                    }
-                ],
-            }
-        ];
-
-        // Insert sample data into the Project collection
-        const insertedData = await Project.insertMany(sampleData);
-        console.log('Sample data added successfully:', insertedData); // Log the inserted data
-    } catch (error) {
-        console.error('Error adding sample data:', error);
-    } finally {
-        // Close the connection
-        mongoose.connection.close();
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
     }
-}
 
-// Run the function
-addSampleData();
+    try {
+        const projects = await Project.find({ userName: username });
+        
+        // Transform projects to match the required structure
+        const result = {};
+        projects.forEach(project => {
+            result[project.projectName] = {
+                errors: project.errors,
+            };
+        });
+
+        res.json({ [username]: result });
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        res.status(500).json({ error: 'Failed to fetch projects' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
