@@ -1,7 +1,7 @@
 // server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import express from 'express'; // Use import instead of require
+import mongoose from 'mongoose'; // Use import instead of require
+import cors from 'cors'; // Use import instead of require
 
 // Create an instance of Express
 const app = express();
@@ -12,14 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/yourdbname', { // Update this to your MongoDB URI
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect('mongodb+srv://admin:admin@alphabyte-logs.o7ate.mongodb.net/?retryWrites=true&w=majority&appName=alphabyte-logs')
 
-// MongoDB schema
+
+// MongoDB schema for error objects
 const ErrorSchema = new mongoose.Schema({
     type: {
         type: String,
@@ -49,6 +45,7 @@ const ErrorSchema = new mongoose.Schema({
     _id: false // No separate ID for error objects
 });
 
+// MongoDB schema for projects
 const ProjectSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -66,6 +63,7 @@ const ProjectSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+// Model
 const Project = mongoose.model('Project', ProjectSchema);
 
 // Route to get projects by username
@@ -78,6 +76,7 @@ app.get('/get-projects', async (req, res) => {
 
     try {
         const projects = await Project.find({ userName: username });
+        
         // Transform projects to match the required structure
         const result = {};
         projects.forEach(project => {
