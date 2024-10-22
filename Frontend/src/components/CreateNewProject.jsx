@@ -5,36 +5,14 @@ const ProjectCreator = () => {
   const [projectName, setProjectName] = useState('');
 
   const platforms = [
-    { name: "Android", icon: "M17 1.5l2 3m-12 0l-2 3m16 9v-4a4 4 0 00-4-4H7a4 4 0 00-4 4v4" },
-    { name: "Angular", icon: "M11.99 2.58L4.55 4.15 3 12c.75 5.45 2.79 7.95 8.99 9.95 6.2-2 8.24-4.5 8.99-9.95l-1.55-7.85-7.43-1.57z" },
-    { name: ".NET", icon: "M16 12h3m-3-4h3m-3 8h3" },
-    { name: "JavaScript", icon: "M6 3h12l3 9-3 9H6l-3-9 3-9z" },
-    { name: "Django", icon: "M12 4.5v7l-2.5-2m5 0l-2.5 2" },
-    { name: "Express", icon: "M7 8h10v8H7V8z" },
-    { name: "FastAPI", icon: "M13 2L3 14h18L11 2h2z" },
-    { name: "Flask", icon: "M5 8l1-2 1 2m-2 6l1 2 1-2m4-3h8l1 3v4l-1 3H9l-1-3v-4l1-3z" },
-    { name: "Flutter", icon: "M10 2L4 8l6 6-6 6" },
-    { name: "Go", icon: "M4 12h16M4 6h16M4 18h16" },
-    { name: "iOS", icon: "M12 2l1.5 2.5H10.5L12 2z" },
-    { name: "Java", icon: "M9 18s1-3 3-3 3 3 3 3" },
-    { name: "Laravel", icon: "M4 4h16v16H4z" },
-    { name: "Next.js", icon: "M5 8h10v8H5V8z" },
-    { name: "Node.js", icon: "M3 3v18h18V3H3z" },
-    { name: "PHP", icon: "M10 2H2v8h8m12-8h-8v8h8z" },
+    { name: "Node.js", icon: "M5 8h10v8H5V8z" },
     { name: "Python", icon: "M8 4H4v4h4M16 4h-4v4h4" },
-    { name: "Rails", icon: "M5 5l14 14" },
-    { name: "React", icon: "M12 2.5a9.5 9.5 0 00-6.6 16.6m0-13.2a9.5 9.5 0 0113.2 13.2" },
-    { name: "React Native", icon: "M12 4a8 8 0 100 16 8 8 0 000-16z" },
-    { name: "Ruby", icon: "M4 4h16v16H4z" },
-    { name: "Spring Boot", icon: "M2 12h16" },
-    { name: "Unity", icon: "M6 12h12" },
-    { name: "Vue", icon: "M5 8h14v8H5V8z" },
   ];
 
   const tabs = ['Popular', 'Browser', 'Server', 'Mobile', 'Desktop', 'Serverless', 'All'];
 
   return (
-    <div style={{ backgroundColor: '#f9fafb', minHeight: '100vh', padding: '20px' }}>
+    <div style={{ backgroundColor: '#f9fafb', padding: '20px',height:'100vh' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Create a new project in 2 steps</h1>
         <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '20px' }}>

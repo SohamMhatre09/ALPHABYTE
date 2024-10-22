@@ -30,10 +30,12 @@ function App() {
           <div className="auth-inner">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={user ? <Navigate to="/create-new" /> : <Login />} />
+              <Route path="/login" element={user ? <Navigate to="/create-new-project" /> : <Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-new-project" element={<ProjectCreator />} />
               <Route path="/error-classification-dashboard" element={user ? <ErrorClassificationDashboard /> : <Navigate to="/login" />} />
+              <Route path="/logout" element={<Register />} />
+
             </Routes>
             <ToastContainer />
           </div>
