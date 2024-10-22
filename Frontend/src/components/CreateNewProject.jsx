@@ -1,118 +1,149 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './ProjectCreator.css';
 
-const ProjectCreator = () => {
+const ProjectCreator = ({ userName = "John Doe" }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('popular');
   const [projectName, setProjectName] = useState('');
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
-  const platforms = [
-    { name: "Node.js", icon: "M5 8h10v8H5V8z" },
-    { name: "Python", icon: "M8 4H4v4h4M16 4h-4v4h4" },
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+  };
+
+  const tabs = [
+    { id: 'popular', label: 'Popular' },
+    { id: 'browser', label: 'Browser' },
+    { id: 'server', label: 'Server' },
+    { id: 'mobile', label: 'Mobile' },
+    { id: 'desktop', label: 'Desktop' },
+    { id: 'serverless', label: 'Serverless' },
+    { id: 'all', label: 'All' }
   ];
 
-  const tabs = ['Popular', 'Browser', 'Server', 'Mobile', 'Desktop', 'Serverless', 'All'];
+  const platforms = [
+    { 
+      name: "Node.js",
+      description: "JavaScript runtime built on Chrome's V8 engine",
+      color: "#68a063"
+    },
+    { 
+      name: "Python",
+      description: "General-purpose programming language",
+      color: "#4584b6"
+    },
+    { 
+      name: "React",
+      description: "JavaScript library for building user interfaces",
+      color: "#61dafb"
+    },
+    { 
+      name: "Vue.js",
+      description: "Progressive JavaScript framework",
+      color: "#42b883"
+    }
+  ];
 
   return (
-    <div style={{ backgroundColor: '#f9fafb', padding: '20px',height:'100vh' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Create a new project in 2 steps</h1>
-        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '20px' }}>
+    <div className="app-container">
+      <nav className="navbar">
+        <div className="logo">DevPlatform</div>
+        <div className="profile-section">
+          <div 
+            className="avatar" 
+            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+          >
+            {getInitials(userName)}
+          </div>
+          {isProfileMenuOpen && (
+            <div className="profile-menu">
+              <div className="menu-item">Profile</div>
+              <div className="menu-item">Settings</div>
+              <div 
+                className="menu-item logout"
+                onClick={() => navigate('/login')}
+              >
+                Logout
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      <div className="content">
+        <h1 className="title">Create a new project in 2 steps</h1>
+        <p className="subtitle">
           Set up a separate project for each part of your application (for example, your API server and frontend client), to
           quickly pinpoint which part of your application errors are coming from.{' '}
-          <a href="#" style={{ color: '#3b82f6' }}>
-            Read the docs.
-          </a>
+          <a href="#" className="link">Read the docs.</a>
         </p>
 
-        <div style={{ marginBottom: '40px' }}>
-          <section style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <span style={{ backgroundColor: '#3b82f6', color: '#fff', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>1</span>
+        <div className="steps-container">
+          <section className="step-card">
+            <h2 className="step-header">
+              <span className="step-number">1</span>
               Choose your platform
             </h2>
-            <div style={{ marginBottom: '20px' }}>
+            <div className="tabs">
               {tabs.map((tab) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab.toLowerCase())}
-                  style={{
-                    marginRight: '10px',
-                    marginBottom: '10px',
-                    padding: '10px 20px',
-                    fontSize: '14px',
-                    borderRadius: '20px',
-                    backgroundColor: activeTab === tab.toLowerCase() ? '#3b82f6' : '#e5e7eb',
-                    color: activeTab === tab.toLowerCase() ? '#fff' : '#374151',
-                    cursor: 'pointer',
-                  }}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`tab ${activeTab === tab.id ? 'active' : ''}`}
                 >
-                  {tab}
+                  {tab.label}
                 </button>
               ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+            <div className="platforms-grid">
               {platforms.map((platform) => (
-                <div key={platform.name} style={{ textAlign: 'center', cursor: 'pointer' }}>
-                  <div
-                    style={{
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '10px',
-                      backgroundColor: '#f3f4f6',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '10px',
-                    }}
+                <div 
+                  key={platform.name}
+                  className={`platform-card ${selectedPlatform === platform.name ? 'selected' : ''}`}
+                  onClick={() => setSelectedPlatform(platform.name)}
+                >
+                  <div 
+                    className="platform-icon"
+                    style={{ backgroundColor: platform.color }}
                   >
-                    <img src="{platform.icon}" alt="" />
+                    {platform.name[0]}
                   </div>
-                  <span style={{ fontSize: '12px', color: '#374151' }}>{platform.name}</span>
+                  <div className="platform-info">
+                    <h3>{platform.name}</h3>
+                    <p>{platform.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </section>
 
-          <section style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <span style={{ backgroundColor: '#3b82f6', color: '#fff', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>2</span>
+          <section className="step-card">
+            <h2 className="step-header">
+              <span className="step-number">2</span>
               Name your project
             </h2>
-            <div>
-              <label htmlFor="project-name" style={{ display: 'block', fontSize: '14px', color: '#374151', marginBottom: '5px' }}>
-                Project name
-              </label>
+            <div className="input-group">
+              <label htmlFor="project-name">Project name</label>
               <input
                 type="text"
                 id="project-name"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 placeholder="my-awesome-project"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '5px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.1)',
-                  transition: 'border-color 0.3s',
-                }}
               />
             </div>
           </section>
 
-          <button
-            onClick={() => alert(`Creating project: ${projectName}`)}
-            style={{
-              backgroundColor: '#3b82f6',
-              color: '#fff',
-              fontWeight: 'bold',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              marginTop: '20px',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
+          <button 
+            className="create-button"
+            disabled={!selectedPlatform || !projectName}
+            onClick={() => alert(`Creating ${projectName} with ${selectedPlatform}`)}
           >
             Create Project
           </button>
