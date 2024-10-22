@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Import Firebase Auth methods
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '../styles/ProjectCreator.css';
 
 const ProjectCreator = () => {
@@ -9,32 +9,28 @@ const ProjectCreator = () => {
   const [projectName, setProjectName] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [userName, setUserName] = useState(''); // State to store username
+  const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);  // Added loading state
 
-  // Initialize Firebase Auth
   const auth = getAuth();
 
-  // Set up an auth state observer to handle user changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Set user display name or email
         setUserName(user.displayName || user.email || 'Anonymous');
+        setIsLoading(false);  // Set loading to false when user is determined
       } else {
-        // Redirect to login if no user is signed in
-        navigate('/login');
+        setTimeout(() => navigate('/login'), 500);  // Slight delay to ensure auth state is loaded
       }
     });
 
-    // Clean up the subscription on unmount
     return () => unsubscribe();
   }, [auth, navigate]);
 
-  // Logout handler
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        navigate('/login'); // Redirect to login after logout
+        navigate('/login');
       })
       .catch((error) => {
         console.error('Error logging out:', error);
@@ -56,15 +52,24 @@ const ProjectCreator = () => {
     { id: 'mobile', label: 'Mobile' },
     { id: 'desktop', label: 'Desktop' },
     { id: 'serverless', label: 'Serverless' },
-    { id: 'all', label: 'All' }
+    { id: 'all', label: 'All' },
   ];
 
   const platforms = [
     { name: 'Node.js', description: 'JavaScript runtime built on Chrome\'s V8 engine', color: '#68a063' },
     { name: 'Python', description: 'General-purpose programming language', color: '#4584b6' },
     { name: 'React', description: 'JavaScript library for building user interfaces', color: '#61dafb' },
-    { name: 'Vue.js', description: 'Progressive JavaScript framework', color: '#42b883' }
+    { name: 'Vue.js', description: 'Progressive JavaScript framework', color: '#42b883' },
   ];
+
+  // Prevent rendering until authentication is confirmed
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -83,7 +88,7 @@ const ProjectCreator = () => {
               <div className="menu-item">Settings</div>
               <div 
                 className="menu-item logout"
-                onClick={handleLogout} // Use the logout handler
+                onClick={handleLogout} 
               >
                 Logout
               </div>

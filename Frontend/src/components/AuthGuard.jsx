@@ -1,7 +1,6 @@
-// src/components/AuthGuard.jsx
 import { Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { auth } from "./Firebase";
+import { auth } from './Firebase';
 
 const AuthGuard = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,10 +10,10 @@ const AuthGuard = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setIsAuthenticated(!!user);
-      setIsLoading(false);
+      setIsLoading(false);  // Only set isLoading to false after auth state is determined
     });
 
-    return () => unsubscribe();
+    return () => unsubscribe();  // Clean up subscription
   }, []);
 
   if (isLoading) {
