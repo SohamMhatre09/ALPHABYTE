@@ -36,8 +36,8 @@ export default function ErrorSolverHomepage() {
         <nav className="nav">
           <a href="#" className="nav-link">Features</a>
           <a href="#" className="nav-link">Pricing</a>
-          <a href="#" className="nav-link">Sign In</a>
-          <a href="#" className="nav-link">Register</a>
+          <a href="/login" className="nav-link">Sign In</a>
+          <a href="/register" className="nav-link">Register</a>
           <button onClick={toggleTheme} className="theme-toggle">
             {theme === 'light' ? <Moon /> : <Sun />}
           </button>
@@ -191,7 +191,6 @@ export default function ErrorSolverHomepage() {
         }
 
         body {
-          width:100%;
           font-family: 'Poppins', sans-serif;
           transition: background-color 0.3s ease;
           margin:0;
