@@ -6,6 +6,7 @@ import Register from './components/Register';
 import ErrorClassificationDashboard from "./components/ErrorClassificationDashborad";
 import ProjectCreator from "./components/CreateNewProject";
 import InitializeProject from "./components/InitializeProject";
+import AllDashboard from "./components/AllDashboard"; // Import the new component
 import AuthGuard from "./components/AuthGuard";
 import { auth } from "./components/Firebase";
 import { ToastContainer } from "react-toastify";
@@ -75,13 +76,21 @@ function App() {
                   </AuthGuard>
                 }
               />
+              <Route
+                path="/all-dashboard"  // Add the new route here
+                element={
+                  <AuthGuard>
+                    <AllDashboard />
+                  </AuthGuard>
+                }
+              />
 
               {/* Redirect /logout to login page */}
               <Route 
                 path="/logout" 
                 element={<Navigate to="/login" replace />} 
               />
-
+              
               {/* Catch all route - redirect to home */}
               <Route 
                 path="*" 
