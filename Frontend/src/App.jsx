@@ -6,7 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import ErrorClassificationDashboard from "./components/ErrorClassificationDashborad";
 import ProjectCreator from "./components/CreateNewProject";
-import InitializeProject from "./components/InitializeProject/InitializeProject";
+import InitializeProject from "./components/InitializeProject";
 import AuthGuard from "./components/AuthGuard";
 import { auth } from "./components/Firebase";
 import { ToastContainer } from "react-toastify";
