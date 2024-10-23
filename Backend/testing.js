@@ -10,6 +10,12 @@ app.get('/', (req, res) => {
 });
 
 // Define your error tracking middleware
+// Error Tracking SDK for testing
+// Add this middleware after all your routes
+
+// Error Tracking SDK for mihir123
+// Add this middleware after all your routes
+
 const errorTrackingMiddleware = (err, req, res, next) => {
     const errorDetails = {
         type: 'serverError',
@@ -20,7 +26,7 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         timestamp: new Date().toISOString(),
         projectInfo: {
             userName: 'dinnerborne@gmail.com',
-            projectName: 'AlphaProject',
+            projectName: 'mihir123',
             platform: 'Node.js'
         }
     };
@@ -30,7 +36,7 @@ const errorTrackingMiddleware = (err, req, res, next) => {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
-            'X-Project-Name': 'AlphaProject',
+            'X-Project-Name': 'mihir123',
             'X-User-Name': 'dinnerborne@gmail.com'
         },
         body: JSON.stringify(errorDetails)
@@ -50,7 +56,7 @@ app.get('/error', (req, res, next) => {
 app.use(errorTrackingMiddleware);
 
 // Start the server
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3008;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

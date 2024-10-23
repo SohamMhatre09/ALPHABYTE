@@ -37,6 +37,9 @@ const ProjectCreator = () => {
         console.error('Error logging out:', error);
       });
   };
+  const handleClick3 = () => {
+    navigate('/'); // Navigate to login-signup page
+  };
 
   const handleCreateProject = () => {
     const projectData = {
@@ -87,7 +90,7 @@ const ProjectCreator = () => {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">ProResolve</div>
+        <div className="logo" onClick={handleClick3}>ProResolve</div>
         <div className="profile-section">
           <div 
             className="avatar" 

@@ -25,13 +25,19 @@ export default function ErrorSolverHomepage() {
   const handleClick = () => {
     navigate('/login'); // Navigate to login-signup page
   };
+  const handleClick2 = () => {
+    navigate('/all-dashboard'); // Navigate to login-signup page
+  };
+  const handleClick3 = () => {
+    navigate('/'); // Navigate to login-signup page
+  };
 
   return (
     <div className={`error-solver-homepage ${theme}`}>
       <header className="header">
         <a href="#" className="logo">
           <AlertCircle className="logo-icon" />
-          <span className="logo-text">ProResolve</span>
+          <span className="logo-text" onClick={handleClick3}>ProResolve</span>
         </a>
         <nav className="nav">
           <a href="#" className="nav-link">Features</a>
@@ -49,7 +55,7 @@ export default function ErrorSolverHomepage() {
             <h1 className="hero-title">Effortlessly Resolve System Errors in Real Time</h1>
             <p className="hero-subtitle">Analyze, classify, and resolve errors with advanced AI-powered insights.</p>
             <button className="cta-button" onClick={handleClick}>Get Started</button>
-            <button className="cta-button" onClick={handleClick}>Go to Dashboard</button>
+            <button className="cta-button" onClick={handleClick2}>Go to Dashboard</button>
           </div>
         </section>
         <section className="features">

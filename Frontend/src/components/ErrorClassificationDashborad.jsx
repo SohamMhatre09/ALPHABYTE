@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
 const styles = {
   body: {
     minHeight: '100vh',
@@ -116,16 +115,16 @@ const styles = {
     marginTop: '15px'
   }
 };
-
-export default function ErrorClassificationDashboard() {
+const ErrorClassificationDashboard = () => {
   const [selectedError, setSelectedError] = useState(null);
   const [errorData, setErrorData] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
+  const { email, projectName } = useParams();
 
   const fetchErrors = async () => {
     try {
-      const response = await fetch('http://localhost:3000/errors/dinnerborne@gmail.com/AlphaProject');
+      const response = await fetch(`http://localhost:3000/errors/${email}/${projectName}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -140,7 +139,7 @@ export default function ErrorClassificationDashboard() {
     fetchErrors();
     const intervalId = setInterval(fetchErrors, 15000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [email, projectName]); // Added dependencies
 
   const backButtonFunction = () => {
     navigate('/error-dashboard');
@@ -237,7 +236,7 @@ export default function ErrorClassificationDashboard() {
         <div style={styles.main}>
           <div>
             <div style={styles.card}>
-              <h2>Error List</h2>
+              <h2>Error List for {projectName}</h2>
               {errorData?.errors.map((error) => {
                 const analysis = analyzeError(error);
                 return (
@@ -320,4 +319,6 @@ export default function ErrorClassificationDashboard() {
       </div>
     </div>
   );
-}
+};
+
+export default ErrorClassificationDashboard;
